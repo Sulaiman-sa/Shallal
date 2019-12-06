@@ -38,6 +38,16 @@ app.get('/id', (req, res) => {
     return res.json(results[0].FCID)
   })
 })
+app.get('/transactionID', (req, res) => {
+  const sql1 = `select TID from transaction
+               order by TID desc limit 1;`
+  connection.query(sql1, (err, results) => {
+    if (err) {
+      return res.status(400).json({ msg: err })
+    }
+    return res.json(results[0].TID)
+  })
+})
 app.get('/employeeID', (req, res) => {
   const sql1 = `SELECT EID From employee
                  ORDER BY EID desc limit 1;`
@@ -234,6 +244,28 @@ app.post('/auth', (req, res) => {
 app.post('/authType', (req, res) => {
   const sql = `Select ETID from employee
                 where EID = ${req.body.EID};`
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.log(err)
+      return res.status(400).json({ msg: err })
+    }
+    return res.json(results)
+  })
+})
+app.put('/transaction', (req, res) => {
+  const sql = `insert into transaction (EID, Date, TotalAmt, StsID, Phone)
+              values ( ${req.body.EID}, '${req.body.Date}', ${req.body.totalAmount}, ${req.body.StsID}, '${req.body.phone}');`
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.log(err)
+      return res.status(400).json({ msg: err })
+    }
+    return res.json(results)
+  })
+})
+app.put('/order', (req, res) => {
+  const sql = `insert into orders (TID, FID, Qty, Amt, StsID) 
+              values ( ${req.body.TID}, ${req.body.FID}, ${req.body.Qty}, ${req.body.Amt},  ${req.body.StsID});`
   connection.query(sql, (err, results) => {
     if (err) {
       console.log(err)

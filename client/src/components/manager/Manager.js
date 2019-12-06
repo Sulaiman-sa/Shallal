@@ -5,6 +5,8 @@ const Manager = props => {
   const Logout = () => {
     localStorage.removeItem('authenticated')
     localStorage.removeItem('authBody')
+    localStorage.removeItem('authMem')
+
     props.history.push(`/`)
   }
   return (

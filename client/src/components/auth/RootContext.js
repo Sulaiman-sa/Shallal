@@ -5,19 +5,24 @@ export const RootContext = React.createContext()
 export default ({ children }) => {
   const prevAuth = window.localStorage.getItem('authenticated') || false
   const prevAuthBody = window.localStorage.getItem('authBody') || null
+  const prevAuthMem = window.localStorage.getItem('authMem') || null
   const [authenticated, setAuthenticated] = useState(prevAuth)
+  const [authMem, setAuthMem] = useState(prevAuthMem)
   const [authBody, setAuthBody] = useState(prevAuthBody)
 
   useEffect(() => {
     window.localStorage.setItem('authenticated', authenticated)
     window.localStorage.setItem('authBody', authBody)
-  }, [authenticated, authBody])
+    window.localStorage.setItem('authMem', authMem)
+  }, [authenticated, authBody, authMem])
 
   const defaultContext = {
     authenticated,
     setAuthenticated,
     authBody,
-    setAuthBody
+    setAuthBody,
+    authMem,
+    setAuthMem
   }
 
   return (

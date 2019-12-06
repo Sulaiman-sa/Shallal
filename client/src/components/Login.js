@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
 import { RootContext } from './auth/RootContext'
@@ -9,6 +9,8 @@ import axios from 'axios'
 
 const Login = props => {
   const [input, handleInputChange] = useInputChange()
+  const [error, setError] = useState(false)
+
   const submitForm = (e, context) => {
     e.preventDefault()
     const auth = {
@@ -20,6 +22,8 @@ const Login = props => {
       .post('/auth', auth)
       .then(res => {
         if (res.data[0]) {
+          console.log(res.data[0].EID)
+          context.setAuthMem(res.data[0].EID)
           axios.post('/authType', res.data[0]).then(res => {
             console.log(res.data)
             if (res.data[0].ETID == 2) {
@@ -33,18 +37,28 @@ const Login = props => {
               props.history.push(`/Cashier`)
             }
           })
+        } else {
+          setError(true)
+          setTimeout(() => {
+            setError(false)
+          }, 200)
         }
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+      })
   }
-  if (localStorage.authenticated === true) {
+  console.log(localStorage)
+  if (localStorage.authenticated === 'true') {
     props.history.push(`/${localStorage.authBody}`)
-    return <Fragment></Fragment>
+    return <Fragment>fsd</Fragment>
   } else {
+    console.log(error)
     return (
       <RootContext.Consumer>
         {context => (
           <Fragment>
+            {error && alert('Your email or password is invalid.')}
             <h2>Please Login</h2>
             <Form onSubmit={e => submitForm(e, context)}>
               <FormGroup>
