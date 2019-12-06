@@ -38,6 +38,24 @@ app.get('/id', (req, res) => {
     return res.json(results[0].FCID)
   })
 })
+app.get('/transaction', (req, res) => {
+  const sql1 = `select * from transaction`
+  connection.query(sql1, (err, results) => {
+    if (err) {
+      return res.status(400).json({ msg: err })
+    }
+    return res.json(results)
+  })
+})
+app.get('/orders', (req, res) => {
+  const sql1 = `select * from orders`
+  connection.query(sql1, (err, results) => {
+    if (err) {
+      return res.status(400).json({ msg: err })
+    }
+    return res.json(results)
+  })
+})
 app.get('/transactionID', (req, res) => {
   const sql1 = `select TID from transaction
                order by TID desc limit 1;`
@@ -150,6 +168,30 @@ app.patch('/updateCashier', (req, res) => {
   const sql = `UPDATE Employee e
     set Fname = '${req.body.Fname}', Lname = '${req.body.Lname}',  StsID = ${req.body.StsID}
     where e.EID =  ${req.body.id};`
+
+  connection.query(sql, (err, results) => {
+    if (err) {
+      return res.status(400).json({ msg: err })
+    }
+    return res.json(results)
+  })
+})
+app.patch('/updateTransaction', (req, res) => {
+  const sql = `update transaction 
+              set StsID = ${req.body.StsID}
+              where TID = ${req.body.TID};`
+
+  connection.query(sql, (err, results) => {
+    if (err) {
+      return res.status(400).json({ msg: err })
+    }
+    return res.json(results)
+  })
+})
+app.patch('/updateOrder', (req, res) => {
+  const sql = `update orders
+              set StsID = ${req.body.StsID} 
+              where OID = ${req.body.OID};`
 
   connection.query(sql, (err, results) => {
     if (err) {
