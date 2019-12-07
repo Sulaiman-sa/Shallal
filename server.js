@@ -28,6 +28,30 @@ app.get('/', (req, res) => {
   res.render('login')
 })
 
+app.put('/reportItem', (req, res) => {
+  const sql1 = `select sum(Amt) as sum from orders O
+                where O.FID = ${req.body.FID} and O.TID in (select TID from transaction
+                where Date >= '${req.body.fromDate}' and Date <= '${req.body.toDate}');`
+  connection.query(sql1, (err, results) => {
+    if (err) {
+      return res.status(400).json({ msg: err })
+    }
+    return res.json(results[0].sum)
+  })
+})
+app.put('/reportCategory', (req, res) => {
+  const sql1 = `select sum(Amt) as sum from orders O
+               where O.FID in ( select FID from fooditem F
+                               where F.FCID = ${req.body.FCID}
+              ) and  O.TID in (select TID from transaction
+                              where Date >= '${req.body.fromDate}' and Date <= '${req.body.toDate}');`
+  connection.query(sql1, (err, results) => {
+    if (err) {
+      return res.status(400).json({ msg: err })
+    }
+    return res.json(results[0].sum)
+  })
+})
 app.get('/id', (req, res) => {
   const sql1 = `SELECT FCID From foodcategory
     ORDER BY FCID desc limit 1;`
