@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { withRouter } from 'react-router-dom'
 
 import { useInputChange } from '../../utils/hooks'
 import {
@@ -28,15 +27,6 @@ const UpdateFC = props => {
       })
 
     axios
-      .get('http://localhost:3000/status')
-      .then(res => {
-        setStatus(res.data)
-        console.log(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    axios
       .get('http://localhost:3000/fooditems')
       .then(res => {
         setFoodItem(res.data)
@@ -51,12 +41,18 @@ const UpdateFC = props => {
     e.preventDefault()
 
     const fod = foodItem.filter(foo => foo.Name === input.foodItem)
-    const statu = status.filter(
-      stat => (stat.Name === input.select || 3) && stat.StsTID === 2
-    )
-    if (fod[0] && statu) {
+    console.log(fod[0])
+    if (fod[0] && input.select && input.select !== 'Choose Status') {
+      console.log(input)
+
       const id = fod[0].FID
-      const StsID = statu[0].StsID
+      let StsID
+      if (input.select === 'Available') {
+        StsID = 3
+      } else {
+        StsID = 4
+      }
+
       const update = {
         id,
         StsID,
@@ -76,7 +72,6 @@ const UpdateFC = props => {
   const toggle = () => setDropdownOpen(prevState => !prevState)
 
   const [food, setFood] = useState('')
-  const [status, setStatus] = useState('')
   const [foodItem, setFoodItem] = useState('')
   const [load, setLoad] = useState(false)
 
@@ -132,6 +127,8 @@ const UpdateFC = props => {
               id='foodItem'
               onChange={handleInputChange}
             >
+              <option>Choose Food Item</option>
+
               {FoodItemsMenu()}
             </Input>
           </FormGroup>
@@ -177,6 +174,8 @@ const UpdateFC = props => {
               id='Select'
               onChange={handleInputChange}
             >
+              <option>Choose Status</option>
+
               <option>Available</option>
               <option>Unavailable</option>
             </Input>

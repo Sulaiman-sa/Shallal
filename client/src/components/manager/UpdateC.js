@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { withRouter } from 'react-router-dom'
 
 import { useInputChange } from '../../utils/hooks'
 import {
@@ -27,28 +26,21 @@ const UpdateC = props => {
       .catch(err => {
         console.log(err)
       })
-
-    axios
-      .get('http://localhost:3000/status')
-      .then(res => {
-        setStatus(res.data)
-        console.log(res.data)
-        setLoad(true)
-      })
-      .catch(err => {
-        console.log(err)
-      })
   }, [])
   const submitForm = e => {
     e.preventDefault()
 
     const cash = cashier.filter(cash => cash.Fname === selectedItem)
-    const statu = status.filter(
-      stat => (stat.Name === input.select || 10) && stat.StsTID === 5
-    )
-    if (cash[0]) {
+
+    if (cash[0] && input.select && input.select !== 'Choose Status') {
       const id = cash[0].EID
-      const StsID = statu[0].StsID
+      let StsID
+      if (input.select === 'Working') {
+        StsID = 10
+      } else {
+        StsID = 11
+      }
+
       const update = {
         id,
         StsID,
@@ -67,7 +59,6 @@ const UpdateC = props => {
   const toggle = () => setDropdownOpen(prevState => !prevState)
 
   const [cashier, setCashier] = useState('')
-  const [status, setStatus] = useState('')
   const [load, setLoad] = useState(false)
 
   const [input, handleInputChange] = useInputChange()
@@ -136,6 +127,8 @@ const UpdateC = props => {
               id='select'
               onChange={handleInputChange}
             >
+              <option>Choose Status</option>
+
               <option>Working</option>
               <option>Not working</option>
             </Input>

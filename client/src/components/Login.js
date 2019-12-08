@@ -1,9 +1,7 @@
 import React, { Fragment, useState } from 'react'
-import { Redirect } from 'react-router-dom'
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap'
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
 import { RootContext } from './auth/RootContext'
 import { useInputChange } from '../utils/hooks'
-import { withRouter } from 'react-router-dom'
 
 import axios from 'axios'
 
@@ -26,7 +24,7 @@ const Login = props => {
           context.setAuthMem(res.data[0].EID)
           axios.post('/authType', res.data[0]).then(res => {
             console.log(res.data)
-            if (res.data[0].ETID == 2) {
+            if (res.data[0].ETID === 2) {
               context.setAuthenticated(true)
               context.setAuthBody('Manager')
               props.history.push(`/Manager`)

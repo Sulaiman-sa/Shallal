@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { withRouter } from 'react-router-dom'
 
 import { useInputChange } from '../../utils/hooks'
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
@@ -7,15 +6,6 @@ import axios from 'axios'
 
 const InsertC = props => {
   useEffect(() => {
-    axios
-      .get('http://localhost:3000/status')
-      .then(res => {
-        setStatus(res.data)
-        console.log(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
     axios
       .get('http://localhost:3000/employeeID')
       .then(res => {
@@ -28,12 +18,14 @@ const InsertC = props => {
   }, [])
   const submitForm = e => {
     e.preventDefault()
-    if (load) {
-      const statu = status.filter(
-        stat => (stat.Name === input.select || 10) && stat.StsTID === 5
-      )
+    if (load && input.select && input.select !== 'Choose Status') {
+      let StsID
+      if (input.select === 'Working') {
+        StsID = 10
+      } else {
+        StsID = 11
+      }
 
-      const StsID = statu[0].StsID
       console.log(id)
       const update = {
         id: id + 1,
@@ -49,7 +41,6 @@ const InsertC = props => {
   }
 
   const [id, setID] = useState('')
-  const [status, setStatus] = useState('')
   const [load, setLoad] = useState(false)
 
   const [input, handleInputChange] = useInputChange()
@@ -92,6 +83,8 @@ const InsertC = props => {
               id='Select'
               onChange={handleInputChange}
             >
+              <option>Choose Status</option>
+
               <option>Working</option>
               <option>Not working</option>
             </Input>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import Manager from '../manager/Manager'
 import Cashier from '../cashier/Cashier'
 import updateFC from '../manager/UpdateFC'

@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { withRouter } from 'react-router-dom'
 
 import { useInputChange } from '../../utils/hooks'
 import {
@@ -28,15 +27,6 @@ const InsertFI = props => {
       })
 
     axios
-      .get('http://localhost:3000/status')
-      .then(res => {
-        setStatus(res.data)
-        console.log(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    axios
       .get('http://localhost:3000/FIID')
       .then(res => {
         setID(res.data)
@@ -50,17 +40,21 @@ const InsertFI = props => {
     e.preventDefault()
 
     const foodCategory = food.filter(foo => foo.Name === selectedItem)
-    const statu = status.filter(
-      stat => (stat.Name === input.select || 3) && stat.StsTID === 2
-    )
-    console.log(statu)
-    if (load && foodCategory[0] && statu[0]) {
+
+    if (
+      load &&
+      foodCategory[0] &&
+      input.select &&
+      input.select !== 'Choose Status'
+    ) {
       const foodCategory = food.filter(foo => foo.Name === selectedItem)
       const FCID = foodCategory[0].FCID
-      const statu = status.filter(
-        stat => (stat.Name === input.select || 3) && stat.StsTID === 2
-      )
-      const StsID = statu[0].StsID
+      let StsID
+      if (input.select === 'Available') {
+        StsID = 3
+      } else {
+        StsID = 4
+      }
 
       let today = new Date()
       const dd = String(today.getDate()).padStart(2, '0')
@@ -89,7 +83,6 @@ const InsertFI = props => {
 
   const [id, setID] = useState('')
   const [food, setFood] = useState('')
-  const [status, setStatus] = useState('')
   const [load, setLoad] = useState(false)
 
   const [input, handleInputChange] = useInputChange()
@@ -166,6 +159,8 @@ const InsertFI = props => {
               id='Select'
               onChange={handleInputChange}
             >
+              <option>Choose Status</option>
+
               <option>Available</option>
               <option>Unavailable</option>
             </Input>

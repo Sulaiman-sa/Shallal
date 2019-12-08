@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { withRouter } from 'react-router-dom'
 
 import { useInputChange } from '../../utils/hooks'
 import {
@@ -27,47 +26,38 @@ const UpdateFC = props => {
       .catch(err => {
         console.log(err)
       })
-
-    axios
-      .get('http://localhost:3000/status')
-      .then(res => {
-        setStatus(res.data)
-        console.log(res.data)
-        setLoad(true)
-      })
-      .catch(err => {
-        console.log(err)
-      })
   }, [])
   const submitForm = e => {
     e.preventDefault()
+    if (food) {
+      const fod = food.filter(foo => foo.Name === selectedItem)
+      if (fod[0] && input.select && input.select !== 'Choose Status') {
+        let StsID
+        if (input.select === 'Empty') {
+          StsID = 2
+        } else {
+          StsID = 1
+        }
+        const id = fod[0].FCID
 
-    const fod = food.filter(foo => foo.Name === selectedItem)
-    if (fod[0]) {
-      const id = fod[0].FCID
-      const statu = status.filter(
-        stat => (stat.Name === input.select || 1) && stat.StsTID === 1
-      )
-      const StsID = statu[0].StsID
-      const update = {
-        id,
-        StsID,
-        name: input.foodName,
-        description: input.Decription
+        const update = {
+          id,
+          StsID,
+          name: input.foodName,
+          description: input.Decription
+        }
+
+        axios
+          .patch('/updateFoodCategory', update)
+          .then(res => props.history.push('/manager'))
+          .catch(err => console.log(err))
       }
-
-      const jsonUpdate = JSON.stringify(update)
-      axios
-        .patch('/updateFoodCategory', JSON.parse(jsonUpdate))
-        .then(res => props.history.push('/manager'))
-        .catch(err => console.log(err))
     }
   }
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const toggle = () => setDropdownOpen(prevState => !prevState)
 
   const [food, setFood] = useState('')
-  const [status, setStatus] = useState('')
   const [load, setLoad] = useState(false)
 
   const [input, handleInputChange] = useInputChange()
@@ -133,6 +123,7 @@ const UpdateFC = props => {
               id='Select'
               onChange={handleInputChange}
             >
+              <option>Choose Status</option>
               <option>Not empty</option>
               <option>Empty</option>
             </Input>

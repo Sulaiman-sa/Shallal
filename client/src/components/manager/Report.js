@@ -1,23 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import { useInputChange } from '../../utils/hooks'
 
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  ListGroup,
-  ListGroupItem,
-  InputGroup,
-  InputGroupAddon,
-  Badge,
-  CustomInput
-} from 'reactstrap'
+import { Button, Form, FormGroup, Input } from 'reactstrap'
 import axios from 'axios'
 const Report = () => {
   useEffect(() => {
@@ -36,14 +20,12 @@ const Report = () => {
       .then(res => {
         setFoodCategory(res.data)
         console.log(res.data)
-        setLoad(true)
       })
       .catch(err => {
         console.log(err)
       })
   }, [])
 
-  const [load, setLoad] = useState('')
   const [foodItem, setFoodItem] = useState('')
   const [foodCategory, setFoodCategory] = useState('')
   const [foundC, setFoundC] = useState('')

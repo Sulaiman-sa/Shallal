@@ -1,23 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import { useInputChange } from '../../utils/hooks'
 
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  ListGroup,
-  ListGroupItem,
-  InputGroup,
-  InputGroupAddon,
-  Badge,
-  CustomInput
-} from 'reactstrap'
+import { Button, Form, FormGroup, Input } from 'reactstrap'
 import axios from 'axios'
 
 const Update = props => {
@@ -35,7 +18,6 @@ const Update = props => {
       .get('http://localhost:3000/orders')
       .then(res => {
         setOrders(res.data)
-        setLoad(true)
         console.log(res.data)
       })
       .catch(err => {
@@ -43,7 +25,6 @@ const Update = props => {
       })
   }, [])
 
-  const [load, setLoad] = useState(false)
   const [transaction, setTransaction] = useState('')
   const [orders, setOrders] = useState('')
   const [selectedTR, setSelectedTR] = useState('')
@@ -66,7 +47,12 @@ const Update = props => {
       }
       axios
         .patch('/updateTransaction', update)
-        .then(res => console.log(res.data))
+        .then(res => {
+          setTimeout(() => {
+            props.history.push('/cashier')
+          }, 300)
+          console.log(res.data)
+        })
         .catch(err => console.log(err))
     }
 

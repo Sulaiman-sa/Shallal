@@ -20,7 +20,7 @@ const Cashier = props => {
       <div>
         Update an existing order
         <Link className='m-3' to='/cashier/update'>
-          <Button color='primary'>Uodate</Button>
+          <Button color='primary'>Update</Button>
         </Link>
       </div>
       <Button onClick={Logout}>Logout</Button>
