@@ -1,9 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const mysql = require('mysql')
-const dbConfig = require('./config/db.config')
+
 const app = express()
-const path = require('path')
 const PORT = process.env.PORT || 5000
 
 const bodyParser = require('body-parser')
@@ -11,10 +10,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 const connection = mysql.createConnection({
-  host: dbConfig.HOST,
-  user: dbConfig.USER,
-  password: dbConfig.PASSWORD,
-  database: dbConfig.DB
+  host: 'localhost',
+  user: 'root',
+  password: '112211',
+  database: 'ssds'
 })
 
 connection.connect(err => {
@@ -24,6 +23,10 @@ connection.connect(err => {
   console.log('mySql connected')
 })
 app.use(cors())
+
+app.get('/', (req, res) => {
+  res.render('login')
+})
 
 app.put('/reportItem', (req, res) => {
   const sql1 = `select sum(Amt) as sum from orders O
@@ -338,12 +341,6 @@ app.put('/order', (req, res) => {
   })
 })
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'))
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
-  })
-}
 app.listen(PORT, () => {
   console.log(`Server Started on port ${PORT}`)
 })
